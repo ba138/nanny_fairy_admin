@@ -67,7 +67,7 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
 
   Stream<DatabaseEvent> _getUserStream() {
     DatabaseReference usersRef =
-        FirebaseDatabase.instance.ref().child('Family');
+        FirebaseDatabase.instance.ref().child('Providers');
 
     if (_searchController.text.isNotEmpty) {
       return usersRef
@@ -82,7 +82,7 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: getAddProductscaffoldKey,
+      key: getFinanceScaffoldKey,
       // key: context.read<MenuController>().getScaffoldKey,
       // drawer: const SideMenu(),
       body: SafeArea(
@@ -125,7 +125,7 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Familys",
+                                        "Providers",
                                         style: GoogleFonts.getFont(
                                           "Poppins",
                                           textStyle: const TextStyle(
@@ -422,8 +422,12 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
                                                   bankDetails['profile'] ??
                                                       'N/A';
                                               final String idFront =
-                                                  bankDetails['IdPicsFamily']
+                                                  bankDetails['IdPics']
                                                           ['frontPic'] ??
+                                                      'N/A';
+                                              final String idBack =
+                                                  bankDetails['IdPics']
+                                                          ['backPic'] ??
                                                       'N/A';
                                               final String postCode =
                                                   bankDetails['postCode'] ??
@@ -432,9 +436,7 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
                                                   bankDetails['houseNumber'] ??
                                                       'N/A';
                                               final List familyPassion =
-                                                  bankDetails[
-                                                          'FamilyPassions'] ??
-                                                      [];
+                                                  bankDetails['Passions'] ?? [];
 
                                               return Container(
                                                 height: 38,
@@ -497,6 +499,7 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
                                                             address,
                                                             profile,
                                                             idFront,
+                                                            idBack,
                                                             postCode,
                                                             houseNumber,
                                                             familyPassion,
@@ -569,6 +572,7 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
     String address,
     String profile,
     String idFront,
+    String idBack,
     String postCode,
     String houseNumber,
     List familyPassion,
@@ -591,7 +595,7 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
                 child: Column(
                   children: [
                     Text(
-                      'Family Details',
+                      'Providers Details',
                       style: GoogleFonts.getFont(
                         "Poppins",
                         textStyle: const TextStyle(
@@ -692,18 +696,29 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
                         const SizedBox(
                           height: 8,
                         ),
-                        Row(
-                          children: familyPassion.map((passion) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                passion,
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.black),
-                              ),
-                            );
-                          }).toList(),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: familyPassion.map((passion) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    right:
+                                        8.0), // Add spacing between containers
+                                child: Container(
+                                  color: AppColor.primaryColor,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Text(
+                                      passion,
+                                      style: const TextStyle(
+                                          fontSize: 14, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ],
                     ),

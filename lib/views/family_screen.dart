@@ -746,18 +746,29 @@ class _FamilyScreenState extends State<FamilyScreen> {
                         const SizedBox(
                           height: 8,
                         ),
-                        Row(
-                          children: familyPassion.map((passion) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                passion,
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.black),
-                              ),
-                            );
-                          }).toList(),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: familyPassion.map((passion) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    right:
+                                        8.0), // Add spacing between containers
+                                child: Container(
+                                  color: AppColor.primaryColor,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Text(
+                                      passion,
+                                      style: const TextStyle(
+                                          fontSize: 14, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ],
                     ),
