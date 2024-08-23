@@ -1,6 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,14 +7,6 @@ import 'package:nanny_fairy_admin/Res/Components/header.dart';
 import 'package:nanny_fairy_admin/Res/Components/keys.dart';
 import 'package:nanny_fairy_admin/Res/Components/side_menu.dart';
 import 'package:nanny_fairy_admin/Res/Components/user_detail_field.dart';
-// import 'package:wallet_admin/Utils/utils.dart';
-// import 'package:wallet_admin/res/components/colors.dart';
-// import 'package:wallet_admin/res/components/header.dart';
-// import 'package:wallet_admin/res/keys.dart';
-// import 'package:wallet_admin/res/responsive.dart';
-// import 'package:wallet_admin/view/slide_menu.dart';
-// import 'package:wallet_admin/view/widgets/user_detai_field.dart';
-// import 'package:intl/intl.dart';
 
 class FamilyScreen extends StatefulWidget {
   const FamilyScreen({super.key});
@@ -28,60 +17,6 @@ class FamilyScreen extends StatefulWidget {
 
 class _FamilyScreenState extends State<FamilyScreen> {
   String? _btn2SelectedVal;
-  // final CollectionReference userDataRef =
-  //     FirebaseFirestore.instance.collection('users');
-  // Future<void> blockUser(String userIdToBlock) async {
-  //   try {
-  //     DocumentReference userDocRef = userDataRef.doc(userIdToBlock);
-  //     DocumentSnapshot userDoc = await userDocRef.get();
-
-  //     if (userDoc.exists) {
-  //       bool isBlocked = userDoc['isBlock'] ?? false;
-  //       if (isBlocked) {
-  //         Utils.toastMessage("User is already blocked");
-  //         Navigator.pop(context);
-  //       } else {
-  //         await userDocRef.update({
-  //           'isBlock': true,
-  //         });
-  //         Navigator.pop(context);
-
-  //         Utils.toastMessage("User blocked successfully");
-  //       }
-  //     } else {
-  //       debugPrint('User document does not exist');
-  //     }
-  //   } catch (e) {
-  //     debugPrint('Error blocking user: $e');
-  //   }
-  // }
-
-  // Future<void> unblockUser(String userIdToUnblock) async {
-  //   try {
-  //     DocumentReference userDocRef = userDataRef.doc(userIdToUnblock);
-  //     DocumentSnapshot userDoc = await userDocRef.get();
-
-  //     if (userDoc.exists) {
-  //       bool isBlocked = userDoc['isBlock'] ?? false;
-  //       if (!isBlocked) {
-  //         Navigator.pop(context);
-
-  //         Utils.toastMessage('User is already unblocked');
-  //       } else {
-  //         await userDocRef.update({
-  //           'isBlock': false,
-  //         });
-  //         Navigator.pop(context);
-
-  //         Utils.toastMessage('User unblocked successfully');
-  //       }
-  //     } else {
-  //       debugPrint('User document does not exist');
-  //     }
-  //   } catch (e) {
-  //     debugPrint('Error unblocking user: $e');
-  //   }
-  // }
 
   static const menuItems = <String>[
     "All",
