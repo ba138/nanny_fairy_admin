@@ -59,7 +59,7 @@ class _SideMenuState extends State<SideMenu> {
             icon: Icons.person_2_outlined,
           ),
           DrawerListTile(
-            title: "Community Posts",
+            title: "Familys Community",
             press: () {
               // Navigator.of(context).pushReplacement(
               //   MaterialPageRoute(
@@ -70,7 +70,7 @@ class _SideMenuState extends State<SideMenu> {
             icon: Icons.data_exploration_outlined,
           ),
           DrawerListTile(
-            title: "Subscribed Familys",
+            title: "Providers Community",
             press: () {
               // Navigator.of(context).pushReplacement(
               //   MaterialPageRoute(
@@ -78,18 +78,7 @@ class _SideMenuState extends State<SideMenu> {
               //   ),
               // );
             },
-            icon: Icons.payment_outlined,
-          ),
-          DrawerListTile(
-            title: "Subscribed Providers",
-            press: () {
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(
-              //     builder: (context) => const UsersSubscribtions(),
-              //   ),
-              // );
-            },
-            icon: Icons.payment_outlined,
+            icon: Icons.data_exploration_outlined,
           ),
         ],
       ),
