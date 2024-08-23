@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nanny_fairy_admin/Res/Components/colors.dart';
+import 'package:nanny_fairy_admin/views/family_screen.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({
@@ -36,11 +37,11 @@ class _SideMenuState extends State<SideMenu> {
           DrawerListTile(
             title: "Familys",
             press: () {
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(
-              //     builder: (context) => const UsersScreen(),
-              //   ),
-              // );
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const FamilyScreen(),
+                ),
+              );
             },
             icon: Icons.group_outlined,
           ),

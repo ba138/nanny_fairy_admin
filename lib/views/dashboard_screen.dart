@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:nanny_fairy_admin/Res/Components/colors.dart';
 import 'package:nanny_fairy_admin/Res/Components/dashboard_widget.dart';
@@ -15,44 +16,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
   double _totalFunds = 0.0;
   double _totalwithdraw = 0.0;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _fetchData();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    fetchCounts();
+  }
 
-  // Future<void> _fetchData() async {
-  //   try {
-  //     QuerySnapshot totalUsersSnapshot =
-  //         await FirebaseFirestore.instance.collection('users').get();
-  //     QuerySnapshot blockedUsersSnapshot = await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .where('isBlock', isEqualTo: true)
-  //         .get();
+  int providerCount = 0;
+  int familyCount = 0;
 
-  //     double totalFunds = 0.0;
-  //     double totalWithdraw = 0.0; // Changed variable name to camelCase
-  //     for (var doc in totalUsersSnapshot.docs) {
-  //       // Ensure the balance and withdrawalAmount are treated as numbers
-  //       totalFunds += (doc['balance'] as num).toDouble();
+  Future<void> fetchCounts() async {
+    try {
+      // References to the 'providers' and 'families' nodes
+      DatabaseReference providersRef =
+          FirebaseDatabase.instance.ref('Providers');
+      DatabaseReference familiesRef = FirebaseDatabase.instance.ref('Family');
 
-  //       // Check if the user has a withdrawalAmount field and add it to totalWithdraw
-  //       var userData = doc.data() as Map<String, dynamic>?; // Explicit cast
-  //       if (userData != null && userData.containsKey('withdrawamount')) {
-  //         totalWithdraw += (userData['withdrawamount'] as num).toDouble();
-  //       }
-  //     }
+      // Fetch the data once from both nodes
+      DataSnapshot providersSnapshot = await providersRef.get();
+      DataSnapshot familiesSnapshot = await familiesRef.get();
 
-  //     setState(() {
-  //       _totalUserCount = totalUsersSnapshot.docs.length;
-  //       _blockedUserCount = blockedUsersSnapshot.docs.length;
-  //       _totalFunds = totalFunds;
-  //       _totalwithdraw = totalWithdraw;
-  //     });
-  //   } catch (e) {
-  //     print('Error fetching data: $e');
-  //   }
-  // }
+      // Assign the number of children in each node to the respective variables
+      setState(() {
+        providerCount = providersSnapshot.children.length;
+        familyCount = familiesSnapshot.children.length;
+      });
+    } catch (e) {
+      print('Error fetching counts: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,13 +69,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               DashboardWidget(
                   icon: Icons.people_outline_outlined,
-                  iconColor: AppColor.textColor1,
-                  title: _totalUserCount.toString(),
+                  iconColor: AppColor.primaryColor,
+                  title: familyCount.toString(),
                   subtitle: 'Total Familys'),
               DashboardWidget(
-                  icon: Icons.people_outline_outlined,
-                  iconColor: AppColor.textColor1,
-                  title: _blockedUserCount.toString(),
+                  icon: Icons.person_2_outlined,
+                  iconColor: AppColor.primaryColor,
+                  title: providerCount.toString(),
                   subtitle: 'Total Providers'),
               DashboardWidget(
                   icon: Icons.payment_outlined,
