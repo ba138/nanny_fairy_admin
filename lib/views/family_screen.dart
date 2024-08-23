@@ -643,24 +643,29 @@ class _FamilyScreenState extends State<FamilyScreen> {
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Family Details',
-                      style: GoogleFonts.getFont(
-                        "Poppins",
-                        textStyle: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: AppColor.textColor1,
+                    Center(
+                      child: Text(
+                        'Family Details',
+                        style: GoogleFonts.getFont(
+                          "Poppins",
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: AppColor.textColor1,
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(profile),
-                      radius: 40,
+                    Center(
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(profile),
+                        radius: 40,
+                      ),
                     ),
                     const SizedBox(
                       height: 20,
