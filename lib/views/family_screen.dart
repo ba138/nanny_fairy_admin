@@ -124,13 +124,34 @@ class _FamilyScreenState extends State<FamilyScreen> {
         FirebaseDatabase.instance.ref().child('Family');
 
     if (_searchController.text.isNotEmpty) {
+      // Search users by first name
       return usersRef
-          .orderByChild('name')
-          .equalTo(_searchController.text)
-          .onValue; // Query users by name if searchController is not empty
+          .orderByChild('firstName')
+          .equalTo(_searchController.text.trim())
+          .onValue;
+    } else if (_btn2SelectedVal == 'Subscribed') {
+      // Query users with paymentInfo.status == 'completed'
+      return usersRef
+          .orderByChild('paymentInfo/status')
+          .equalTo('completed')
+          .onValue;
     } else {
-      return usersRef.onValue; // Get all users if searchController is empty
+      // Return all users if no filters are applied
+      return usersRef.onValue;
     }
+  }
+
+// Filter users manually by payment status if needed
+  List _filterUsersByStatus(Map<dynamic, dynamic>? users, String status) {
+    if (users == null) return [];
+
+    return users.entries
+        .where((entry) {
+          final paymentInfo = entry.value['paymentInfo'];
+          return paymentInfo != null && paymentInfo['status'] == status;
+        })
+        .map((entry) => entry.value)
+        .toList();
   }
 
   @override
@@ -311,11 +332,9 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                                 value: _btn2SelectedVal,
                                                 hint: const Text('All'),
                                                 onChanged: (String? newValue) {
-                                                  if (newValue != "All") {
-                                                    setState(() =>
-                                                        _btn2SelectedVal =
-                                                            newValue);
-                                                  }
+                                                  setState(() =>
+                                                      _btn2SelectedVal =
+                                                          newValue);
                                                 },
                                                 items: _dropDownMenuItems,
                                               ),
@@ -432,31 +451,49 @@ class _FamilyScreenState extends State<FamilyScreen> {
 
                                           if (data == null || data.isEmpty) {
                                             return const Center(
-                                              child:
-                                                  Text('No User details found'),
-                                            ); // Handle no data scenario
+                                                child: Text(
+                                                    'No User details found')); // Handle no data scenario
                                           }
 
-                                          // Convert the map to a list of entries
-                                          final familyList =
-                                              data.entries.toList();
+                                          // Apply filtering based on the status
+                                          List<Map<dynamic, dynamic>>
+                                              filteredUsers;
+                                          if (_btn2SelectedVal != 'All' &&
+                                              _btn2SelectedVal != null) {
+                                            filteredUsers =
+                                                _filterUsersByStatus(
+                                                        data, 'completed')
+                                                    .cast<
+                                                        Map<dynamic, dynamic>>()
+                                                    .toList();
+                                          } else {
+                                            filteredUsers = data.values
+                                                .cast<Map<dynamic, dynamic>>()
+                                                .toList();
+                                          }
+
+                                          if (filteredUsers.isEmpty) {
+                                            return const Center(
+                                                child: Text('No users found'));
+                                          }
 
                                           return ListView.separated(
                                             shrinkWrap: true,
-                                            itemCount: familyList.length,
+                                            itemCount: filteredUsers.length,
                                             separatorBuilder:
                                                 (context, index) =>
                                                     const SizedBox(height: 12),
                                             itemBuilder: (context, index) {
-                                              final entry = familyList[index];
-                                              final bankDetails = entry.value
-                                                  as Map<dynamic, dynamic>;
+                                              final bankDetails =
+                                                  filteredUsers[index];
 
-                                              final String name = bankDetails[
-                                                          'firstName'] +
-                                                      ' ' +
-                                                      bankDetails['lastName'] ??
-                                                  '';
+                                              // Properly concatenate and null-check for name
+                                              final String name = (bankDetails[
+                                                          'firstName'] ??
+                                                      '') +
+                                                  ' ' +
+                                                  (bankDetails['lastName'] ??
+                                                      '');
                                               final String email =
                                                   bankDetails['email'] ?? 'N/A';
                                               final String phoneNumber =
@@ -477,7 +514,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                                       'N/A';
                                               final String idFront =
                                                   bankDetails['IdPicsFamily']
-                                                          ['frontPic'] ??
+                                                          ?['frontPic'] ??
                                                       'N/A';
                                               final String postCode =
                                                   bankDetails['postCode'] ??
@@ -507,35 +544,31 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                                     Expanded(
                                                       flex: 1,
                                                       child: Center(
-                                                        child: Text((index + 1)
-                                                            .toString()),
-                                                      ),
+                                                          child: Text(
+                                                              (index + 1)
+                                                                  .toString())),
                                                     ),
                                                     Expanded(
                                                       flex: 3,
                                                       child: Center(
-                                                        child: Text(name),
-                                                      ),
+                                                          child: Text(name)),
                                                     ),
                                                     Expanded(
                                                       flex: 4,
                                                       child: Center(
-                                                        child: Text(email),
-                                                      ),
+                                                          child: Text(email)),
                                                     ),
                                                     Expanded(
                                                       flex: 3,
                                                       child: Center(
-                                                        child:
-                                                            Text(phoneNumber),
-                                                      ),
+                                                          child: Text(
+                                                              phoneNumber)),
                                                     ),
                                                     Expanded(
                                                       flex: 3,
                                                       child: Center(
-                                                        child:
-                                                            Text(formattedDate),
-                                                      ),
+                                                          child: Text(
+                                                              formattedDate)),
                                                     ),
                                                     Expanded(
                                                       flex: 1,
