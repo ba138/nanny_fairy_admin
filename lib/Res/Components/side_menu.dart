@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nanny_fairy_admin/Res/Components/colors.dart';
+import 'package:nanny_fairy_admin/views/Family_community.dart';
 import 'package:nanny_fairy_admin/views/family_screen.dart';
 import 'package:nanny_fairy_admin/views/main_Screen.dart';
+import 'package:nanny_fairy_admin/views/provider_community.dart';
 import 'package:nanny_fairy_admin/views/providers_screen.dart';
 
 class SideMenu extends StatefulWidget {
@@ -59,37 +61,26 @@ class _SideMenuState extends State<SideMenu> {
             icon: Icons.person_2_outlined,
           ),
           DrawerListTile(
-            title: "Community Posts",
+            title: "Familys Community",
             press: () {
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(
-              //     builder: (context) => const WithdrawUsers(),
-              //   ),
-              // );
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const FamilyCommunityScreen(),
+                ),
+              );
             },
             icon: Icons.data_exploration_outlined,
           ),
           DrawerListTile(
-            title: "Subscribed Familys",
+            title: "Providers Community",
             press: () {
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(
-              //     builder: (context) => const Deposite(),
-              //   ),
-              // );
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const ProviderCommunityScreen(),
+                ),
+              );
             },
-            icon: Icons.payment_outlined,
-          ),
-          DrawerListTile(
-            title: "Subscribed Providers",
-            press: () {
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(
-              //     builder: (context) => const UsersSubscribtions(),
-              //   ),
-              // );
-            },
-            icon: Icons.payment_outlined,
+            icon: Icons.data_exploration_outlined,
           ),
         ],
       ),

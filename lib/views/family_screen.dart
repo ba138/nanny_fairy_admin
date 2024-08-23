@@ -1,6 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,14 +7,6 @@ import 'package:nanny_fairy_admin/Res/Components/header.dart';
 import 'package:nanny_fairy_admin/Res/Components/keys.dart';
 import 'package:nanny_fairy_admin/Res/Components/side_menu.dart';
 import 'package:nanny_fairy_admin/Res/Components/user_detail_field.dart';
-// import 'package:wallet_admin/Utils/utils.dart';
-// import 'package:wallet_admin/res/components/colors.dart';
-// import 'package:wallet_admin/res/components/header.dart';
-// import 'package:wallet_admin/res/keys.dart';
-// import 'package:wallet_admin/res/responsive.dart';
-// import 'package:wallet_admin/view/slide_menu.dart';
-// import 'package:wallet_admin/view/widgets/user_detai_field.dart';
-// import 'package:intl/intl.dart';
 
 class FamilyScreen extends StatefulWidget {
   const FamilyScreen({super.key});
@@ -28,60 +17,6 @@ class FamilyScreen extends StatefulWidget {
 
 class _FamilyScreenState extends State<FamilyScreen> {
   String? _btn2SelectedVal;
-  // final CollectionReference userDataRef =
-  //     FirebaseFirestore.instance.collection('users');
-  // Future<void> blockUser(String userIdToBlock) async {
-  //   try {
-  //     DocumentReference userDocRef = userDataRef.doc(userIdToBlock);
-  //     DocumentSnapshot userDoc = await userDocRef.get();
-
-  //     if (userDoc.exists) {
-  //       bool isBlocked = userDoc['isBlock'] ?? false;
-  //       if (isBlocked) {
-  //         Utils.toastMessage("User is already blocked");
-  //         Navigator.pop(context);
-  //       } else {
-  //         await userDocRef.update({
-  //           'isBlock': true,
-  //         });
-  //         Navigator.pop(context);
-
-  //         Utils.toastMessage("User blocked successfully");
-  //       }
-  //     } else {
-  //       debugPrint('User document does not exist');
-  //     }
-  //   } catch (e) {
-  //     debugPrint('Error blocking user: $e');
-  //   }
-  // }
-
-  // Future<void> unblockUser(String userIdToUnblock) async {
-  //   try {
-  //     DocumentReference userDocRef = userDataRef.doc(userIdToUnblock);
-  //     DocumentSnapshot userDoc = await userDocRef.get();
-
-  //     if (userDoc.exists) {
-  //       bool isBlocked = userDoc['isBlock'] ?? false;
-  //       if (!isBlocked) {
-  //         Navigator.pop(context);
-
-  //         Utils.toastMessage('User is already unblocked');
-  //       } else {
-  //         await userDocRef.update({
-  //           'isBlock': false,
-  //         });
-  //         Navigator.pop(context);
-
-  //         Utils.toastMessage('User unblocked successfully');
-  //       }
-  //     } else {
-  //       debugPrint('User document does not exist');
-  //     }
-  //   } catch (e) {
-  //     debugPrint('Error unblocking user: $e');
-  //   }
-  // }
 
   static const menuItems = <String>[
     "All",
@@ -124,13 +59,34 @@ class _FamilyScreenState extends State<FamilyScreen> {
         FirebaseDatabase.instance.ref().child('Family');
 
     if (_searchController.text.isNotEmpty) {
+      // Search users by first name
       return usersRef
-          .orderByChild('name')
-          .equalTo(_searchController.text)
-          .onValue; // Query users by name if searchController is not empty
+          .orderByChild('firstName')
+          .equalTo(_searchController.text.trim())
+          .onValue;
+    } else if (_btn2SelectedVal == 'Subscribed') {
+      // Query users with paymentInfo.status == 'completed'
+      return usersRef
+          .orderByChild('paymentInfo/status')
+          .equalTo('completed')
+          .onValue;
     } else {
-      return usersRef.onValue; // Get all users if searchController is empty
+      // Return all users if no filters are applied
+      return usersRef.onValue;
     }
+  }
+
+// Filter users manually by payment status if needed
+  List _filterUsersByStatus(Map<dynamic, dynamic>? users, String status) {
+    if (users == null) return [];
+
+    return users.entries
+        .where((entry) {
+          final paymentInfo = entry.value['paymentInfo'];
+          return paymentInfo != null && paymentInfo['status'] == status;
+        })
+        .map((entry) => entry.value)
+        .toList();
   }
 
   @override
@@ -311,11 +267,9 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                                 value: _btn2SelectedVal,
                                                 hint: const Text('All'),
                                                 onChanged: (String? newValue) {
-                                                  if (newValue != "All") {
-                                                    setState(() =>
-                                                        _btn2SelectedVal =
-                                                            newValue);
-                                                  }
+                                                  setState(() =>
+                                                      _btn2SelectedVal =
+                                                          newValue);
                                                 },
                                                 items: _dropDownMenuItems,
                                               ),
@@ -432,31 +386,49 @@ class _FamilyScreenState extends State<FamilyScreen> {
 
                                           if (data == null || data.isEmpty) {
                                             return const Center(
-                                              child:
-                                                  Text('No User details found'),
-                                            ); // Handle no data scenario
+                                                child: Text(
+                                                    'No User details found')); // Handle no data scenario
                                           }
 
-                                          // Convert the map to a list of entries
-                                          final familyList =
-                                              data.entries.toList();
+                                          // Apply filtering based on the status
+                                          List<Map<dynamic, dynamic>>
+                                              filteredUsers;
+                                          if (_btn2SelectedVal != 'All' &&
+                                              _btn2SelectedVal != null) {
+                                            filteredUsers =
+                                                _filterUsersByStatus(
+                                                        data, 'completed')
+                                                    .cast<
+                                                        Map<dynamic, dynamic>>()
+                                                    .toList();
+                                          } else {
+                                            filteredUsers = data.values
+                                                .cast<Map<dynamic, dynamic>>()
+                                                .toList();
+                                          }
+
+                                          if (filteredUsers.isEmpty) {
+                                            return const Center(
+                                                child: Text('No users found'));
+                                          }
 
                                           return ListView.separated(
                                             shrinkWrap: true,
-                                            itemCount: familyList.length,
+                                            itemCount: filteredUsers.length,
                                             separatorBuilder:
                                                 (context, index) =>
                                                     const SizedBox(height: 12),
                                             itemBuilder: (context, index) {
-                                              final entry = familyList[index];
-                                              final bankDetails = entry.value
-                                                  as Map<dynamic, dynamic>;
+                                              final bankDetails =
+                                                  filteredUsers[index];
 
-                                              final String name = bankDetails[
-                                                          'firstName'] +
-                                                      ' ' +
-                                                      bankDetails['lastName'] ??
-                                                  '';
+                                              // Properly concatenate and null-check for name
+                                              final String name = (bankDetails[
+                                                          'firstName'] ??
+                                                      '') +
+                                                  ' ' +
+                                                  (bankDetails['lastName'] ??
+                                                      '');
                                               final String email =
                                                   bankDetails['email'] ?? 'N/A';
                                               final String phoneNumber =
@@ -477,7 +449,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                                       'N/A';
                                               final String idFront =
                                                   bankDetails['IdPicsFamily']
-                                                          ['frontPic'] ??
+                                                          ?['frontPic'] ??
                                                       'N/A';
                                               final String postCode =
                                                   bankDetails['postCode'] ??
@@ -507,35 +479,31 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                                     Expanded(
                                                       flex: 1,
                                                       child: Center(
-                                                        child: Text((index + 1)
-                                                            .toString()),
-                                                      ),
+                                                          child: Text(
+                                                              (index + 1)
+                                                                  .toString())),
                                                     ),
                                                     Expanded(
                                                       flex: 3,
                                                       child: Center(
-                                                        child: Text(name),
-                                                      ),
+                                                          child: Text(name)),
                                                     ),
                                                     Expanded(
                                                       flex: 4,
                                                       child: Center(
-                                                        child: Text(email),
-                                                      ),
+                                                          child: Text(email)),
                                                     ),
                                                     Expanded(
                                                       flex: 3,
                                                       child: Center(
-                                                        child:
-                                                            Text(phoneNumber),
-                                                      ),
+                                                          child: Text(
+                                                              phoneNumber)),
                                                     ),
                                                     Expanded(
                                                       flex: 3,
                                                       child: Center(
-                                                        child:
-                                                            Text(formattedDate),
-                                                      ),
+                                                          child: Text(
+                                                              formattedDate)),
                                                     ),
                                                     Expanded(
                                                       flex: 1,
@@ -643,24 +611,29 @@ class _FamilyScreenState extends State<FamilyScreen> {
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Family Details',
-                      style: GoogleFonts.getFont(
-                        "Poppins",
-                        textStyle: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: AppColor.textColor1,
+                    Center(
+                      child: Text(
+                        'Family Details',
+                        style: GoogleFonts.getFont(
+                          "Poppins",
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: AppColor.textColor1,
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(profile),
-                      radius: 40,
+                    Center(
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(profile),
+                        radius: 40,
+                      ),
                     ),
                     const SizedBox(
                       height: 20,
