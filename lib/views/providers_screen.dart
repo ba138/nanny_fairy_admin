@@ -19,69 +19,15 @@ import 'package:nanny_fairy_admin/Res/Components/user_detail_field.dart';
 // import 'package:wallet_admin/view/widgets/user_detai_field.dart';
 // import 'package:intl/intl.dart';
 
-class FamilyScreen extends StatefulWidget {
-  const FamilyScreen({super.key});
+class ProvidersScreen extends StatefulWidget {
+  const ProvidersScreen({super.key});
 
   @override
-  State<FamilyScreen> createState() => _FamilyScreenState();
+  State<ProvidersScreen> createState() => _ProvidersScreenState();
 }
 
-class _FamilyScreenState extends State<FamilyScreen> {
+class _ProvidersScreenState extends State<ProvidersScreen> {
   String? _btn2SelectedVal;
-  // final CollectionReference userDataRef =
-  //     FirebaseFirestore.instance.collection('users');
-  // Future<void> blockUser(String userIdToBlock) async {
-  //   try {
-  //     DocumentReference userDocRef = userDataRef.doc(userIdToBlock);
-  //     DocumentSnapshot userDoc = await userDocRef.get();
-
-  //     if (userDoc.exists) {
-  //       bool isBlocked = userDoc['isBlock'] ?? false;
-  //       if (isBlocked) {
-  //         Utils.toastMessage("User is already blocked");
-  //         Navigator.pop(context);
-  //       } else {
-  //         await userDocRef.update({
-  //           'isBlock': true,
-  //         });
-  //         Navigator.pop(context);
-
-  //         Utils.toastMessage("User blocked successfully");
-  //       }
-  //     } else {
-  //       debugPrint('User document does not exist');
-  //     }
-  //   } catch (e) {
-  //     debugPrint('Error blocking user: $e');
-  //   }
-  // }
-
-  // Future<void> unblockUser(String userIdToUnblock) async {
-  //   try {
-  //     DocumentReference userDocRef = userDataRef.doc(userIdToUnblock);
-  //     DocumentSnapshot userDoc = await userDocRef.get();
-
-  //     if (userDoc.exists) {
-  //       bool isBlocked = userDoc['isBlock'] ?? false;
-  //       if (!isBlocked) {
-  //         Navigator.pop(context);
-
-  //         Utils.toastMessage('User is already unblocked');
-  //       } else {
-  //         await userDocRef.update({
-  //           'isBlock': false,
-  //         });
-  //         Navigator.pop(context);
-
-  //         Utils.toastMessage('User unblocked successfully');
-  //       }
-  //     } else {
-  //       debugPrint('User document does not exist');
-  //     }
-  //   } catch (e) {
-  //     debugPrint('Error unblocking user: $e');
-  //   }
-  // }
 
   static const menuItems = <String>[
     "All",

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nanny_fairy_admin/Res/Components/colors.dart';
 import 'package:nanny_fairy_admin/views/family_screen.dart';
+import 'package:nanny_fairy_admin/views/main_Screen.dart';
+import 'package:nanny_fairy_admin/views/providers_screen.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({
@@ -26,11 +28,11 @@ class _SideMenuState extends State<SideMenu> {
           DrawerListTile(
             title: "Dashboard",
             press: () {
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(
-              //     builder: (context) => const MainScreen(),
-              //   ),
-              // );
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const MainScreen(),
+                ),
+              );
             },
             icon: Icons.home_outlined,
           ),
@@ -48,11 +50,11 @@ class _SideMenuState extends State<SideMenu> {
           DrawerListTile(
             title: "Providers",
             press: () {
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(
-              //     builder: (context) => const MyDetails(),
-              //   ),
-              // );
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const ProvidersScreen(),
+                ),
+              );
             },
             icon: Icons.person_2_outlined,
           ),
