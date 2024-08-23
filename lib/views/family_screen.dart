@@ -383,22 +383,10 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                               flex: 3,
                                               child: Center(
                                                 child: Text(
-                                                  'Date',
+                                                  'Date of Birth',
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: Center(
-                                                child: Text(
-                                                  'Phone Number',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.transparent,
                                                   ),
                                                 ),
                                               ),
@@ -449,55 +437,34 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                             ); // Handle no data scenario
                                           }
 
-                                          // Example: Assuming data is a Map, you can iterate through the entries
+                                          // Convert the map to a list of entries
                                           final familyList =
-                                              data.entries.map((entry) {
-                                            return ListTile(
-                                              title: Text(entry.value[
-                                                  'name']), // Access data fields as needed
-                                              subtitle:
-                                                  Text(entry.value['email']),
-                                            );
-                                          }).toList();
+                                              data.entries.toList();
 
                                           return ListView.separated(
                                             shrinkWrap: true,
-                                            itemCount: data.length,
+                                            itemCount: familyList.length,
                                             separatorBuilder:
                                                 (context, index) =>
                                                     const SizedBox(height: 12),
                                             itemBuilder: (context, index) {
-                                              // Safely retrieve and cast data for each document
+                                              final entry = familyList[index];
+                                              final bankDetails = entry.value
+                                                  as Map<dynamic, dynamic>;
 
-                                              final bankDetails =
-                                                  data[index].data()
-                                                      as Map<String, dynamic>;
-                                              final String name =
-                                                  bankDetails['name'] ?? '';
+                                              final String name = bankDetails[
+                                                          'firstName'] +
+                                                      bankDetails['lastName'] ??
+                                                  '';
                                               final String email =
                                                   bankDetails['email'] ?? 'N/A';
-                                              final String creationDate =
-                                                  bankDetails['createdAt'] ??
-                                                      'N/A';
-                                              final String userId =
-                                                  bankDetails['id'] ?? 'N/A';
                                               final String phoneNumber =
-                                                  bankDetails['phone'] ?? 'N/A';
-                                              final bool isBlock =
-                                                  bankDetails['isBlock'] ??
+                                                  bankDetails['phoneNumber'] ??
                                                       'N/A';
-                                              final double balance =
-                                                  bankDetails['balance'] ??
-                                                      'N/A';
-                                              final String category =
-                                                  bankDetails['category'] ??
-                                                      'N/A';
-                                              // DateTime dateTime =
-                                              //     creationDate.toDate();
-                                              // Format DateTime to string
-                                              // String formattedDate =
-                                              //     DateFormat('yyyy-MM-dd')
-                                              //         .format(dateTime);
+                                              final String formattedDate =
+                                                  bankDetails['dob'] ??
+                                                      'N/A'; // Replace with actual date formatting logic
+
                                               return Container(
                                                 height: 38,
                                                 width: MediaQuery.of(context)
@@ -541,23 +508,15 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                                     Expanded(
                                                       flex: 3,
                                                       child: Center(
-                                                        child: Text(
-                                                            "formattedDate"),
+                                                        child:
+                                                            Text(formattedDate),
                                                       ),
                                                     ),
                                                     Expanded(
                                                       flex: 1,
                                                       child: InkWell(
                                                         onTap: () {
-                                                          showCustomDialog(
-                                                            context,
-                                                            name,
-                                                            email,
-                                                            category,
-                                                            phoneNumber,
-                                                            "formattedDate",
-                                                            balance.toString(),
-                                                          );
+                                                          // Handle View action
                                                         },
                                                         child: Container(
                                                           height: 28,
@@ -572,72 +531,23 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                                                         6),
                                                           ),
                                                           child: Center(
-                                                              child: Text(
-                                                            "View",
-                                                            style: GoogleFonts
-                                                                .getFont(
-                                                              "Poppins",
-                                                              textStyle:
-                                                                  const TextStyle(
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                color: AppColor
-                                                                    .whiteColor,
+                                                            child: Text(
+                                                              "View",
+                                                              style: GoogleFonts
+                                                                  .getFont(
+                                                                "Poppins",
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: AppColor
+                                                                      .whiteColor,
+                                                                ),
                                                               ),
                                                             ),
-                                                          )),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 8,
-                                                    ),
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          blockDialog(
-                                                            context,
-                                                            name,
-                                                            email,
-                                                            phoneNumber,
-                                                            "formattedDate",
-                                                            balance.toString(),
-                                                            category,
-                                                            userId,
-                                                          );
-                                                        },
-                                                        child: Container(
-                                                          height: 28,
-                                                          width: 50,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: AppColor
-                                                                .primaryColor,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        6),
                                                           ),
-                                                          child: Center(
-                                                              child: Text(
-                                                            "Block",
-                                                            style: GoogleFonts
-                                                                .getFont(
-                                                              "Poppins",
-                                                              textStyle:
-                                                                  const TextStyle(
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                color: AppColor
-                                                                    .whiteColor,
-                                                              ),
-                                                            ),
-                                                          )),
                                                         ),
                                                       ),
                                                     ),
@@ -647,7 +557,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                             },
                                           );
                                         },
-                                      ),
+                                      )
                                     ],
                                   ),
                                 ),
