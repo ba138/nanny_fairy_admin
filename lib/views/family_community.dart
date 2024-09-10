@@ -3,6 +3,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:nanny_fairy_admin/Res/Components/Responsive.dart';
@@ -209,101 +210,170 @@ class _FamilyCommunityScreenState extends State<FamilyCommunityScreen> {
                                       const SizedBox(
                                         height: 20,
                                       ),
-                                      SizedBox(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          child: StreamBuilder(
-                                            stream:
-                                                _getUserStream(), // Stream fetching data from Firebase
-                                            builder: (context, snapshot) {
-                                              if (snapshot.hasError) {
-                                                return Text(
-                                                    'Error: ${snapshot.error}');
-                                              }
+                                      Center(
+                                        child: SizedBox(
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .height,
+                                            child: StreamBuilder(
+                                              stream:
+                                                  _getUserStream(), // Stream fetching data from Firebase
+                                              builder: (context, snapshot) {
+                                                if (snapshot.hasError) {
+                                                  return Text(
+                                                      'Error: ${snapshot.error}');
+                                                }
 
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return const Center(
-                                                    child:
-                                                        CircularProgressIndicator());
-                                              }
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                }
 
-                                              final data =
-                                                  snapshot.data!.snapshot.value
-                                                      as Map<dynamic, dynamic>?;
+                                                final data = snapshot
+                                                        .data!.snapshot.value
+                                                    as Map<dynamic, dynamic>?;
 
-                                              if (data == null ||
-                                                  data.isEmpty) {
-                                                return const Center(
-                                                    child:
-                                                        Text('No posts found'));
-                                              }
+                                                if (data == null ||
+                                                    data.isEmpty) {
+                                                  return const Center(
+                                                      child: Text(
+                                                          'No posts found'));
+                                                }
 
-                                              // Convert the data to a list for easy iteration in the ListView
-                                              final posts =
-                                                  data.values.toList();
+                                                // Convert the data to a list for easy iteration in the ListView
+                                                final posts =
+                                                    data.values.toList();
 
-                                              return SizedBox(
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                child: ListView.builder(
-                                                  itemCount: posts
-                                                      .length, // Number of posts
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final post = posts[index];
-                                                    final Map commentsMap =
-                                                        post['comments'] as Map;
-                                                    return Container(
-                                                      width: 400,
-                                                      color: Colors.transparent,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(20.0),
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                CircleAvatar(
-                                                                  backgroundColor:
-                                                                      AppColor
-                                                                          .primaryColor,
-                                                                  backgroundImage:
-                                                                      NetworkImage(
-                                                                          post[
-                                                                              'familyProfile']),
-                                                                ),
-                                                                const SizedBox(
-                                                                    width: 12),
-                                                                Column(
+                                                return SizedBox(
+                                                  height: MediaQuery.of(context)
+                                                      .size
+                                                      .height,
+                                                  child: ListView.builder(
+                                                    itemCount: posts
+                                                        .length, // Number of posts
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      final post = posts[index];
+                                                      final Map<dynamic,
+                                                              dynamic>
+                                                          commentsMap =
+                                                          post['comments'] !=
+                                                                  null
+                                                              ? post['comments']
+                                                                  as Map<
+                                                                      dynamic,
+                                                                      dynamic>
+                                                              : {};
+                                                      return Container(
+                                                        width: 400,
+                                                        color:
+                                                            Colors.transparent,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(20.0),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  CircleAvatar(
+                                                                    backgroundColor:
+                                                                        AppColor
+                                                                            .primaryColor,
+                                                                    backgroundImage:
+                                                                        NetworkImage(
+                                                                            post['familyProfile']),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      width:
+                                                                          12),
+                                                                  Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        post[
+                                                                            'familyName'],
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          color:
+                                                                              Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        DateFormat('yyyy-MM-dd – kk:mm')
+                                                                            .format(
+                                                                          DateTime.parse(post['timePost'])
+                                                                              .toLocal(),
+                                                                        ), // Custom date format
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color:
+                                                                              Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                              Container(
+                                                                width: 400,
+                                                                color: Colors
+                                                                    .transparent,
+                                                                child: Column(
                                                                   crossAxisAlignment:
                                                                       CrossAxisAlignment
                                                                           .start,
                                                                   children: [
+                                                                    Row(
+                                                                      children: [
+                                                                        Text(
+                                                                          post[
+                                                                              'title'],
+                                                                          style:
+                                                                              const TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color:
+                                                                                Colors.black,
+                                                                          ),
+                                                                        ),
+                                                                        post['status'] ==
+                                                                                false
+                                                                            ? const Text(
+                                                                                "(UnVerified)",
+                                                                                style: TextStyle(
+                                                                                  fontWeight: FontWeight.w400,
+                                                                                  color: Colors.grey,
+                                                                                ),
+                                                                              )
+                                                                            : const Text(
+                                                                                "(Verified)",
+                                                                                style: TextStyle(
+                                                                                  fontWeight: FontWeight.w400,
+                                                                                  color: AppColor.primaryColor,
+                                                                                ),
+                                                                              )
+                                                                      ],
+                                                                    ),
+                                                                    const SizedBox(
+                                                                        height:
+                                                                            8),
                                                                     Text(
                                                                       post[
-                                                                          'familyName'],
-                                                                      style:
-                                                                          const TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        color: Colors
-                                                                            .black,
-                                                                      ),
-                                                                    ),
-                                                                    Text(
-                                                                      DateFormat(
-                                                                              'yyyy-MM-dd – kk:mm')
-                                                                          .format(
-                                                                        DateTime.parse(post['timePost'])
-                                                                            .toLocal(),
-                                                                      ), // Custom date format
+                                                                          'content'],
                                                                       style:
                                                                           const TextStyle(
                                                                         fontWeight:
@@ -314,37 +384,45 @@ class _FamilyCommunityScreenState extends State<FamilyCommunityScreen> {
                                                                     ),
                                                                   ],
                                                                 ),
-                                                              ],
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 8),
-                                                            Container(
-                                                              width: 400,
-                                                              color: Colors
-                                                                  .transparent,
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Text(
-                                                                    post[
-                                                                        'title'],
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .black,
+                                                              ),
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                              Align(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .topLeft,
+                                                                child: Card(
+                                                                  child:
+                                                                      Container(
+                                                                    height: 400,
+                                                                    width: 400,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      image:
+                                                                          DecorationImage(
+                                                                        image:
+                                                                            NetworkImage(
+                                                                          post[
+                                                                              'post'],
+                                                                        ),
+                                                                        fit: BoxFit
+                                                                            .fill,
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                  const SizedBox(
-                                                                      height:
-                                                                          8),
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 8,
+                                                              ),
+                                                              Row(
+                                                                children: [
+                                                                  const Icon(Icons
+                                                                      .comment_outlined),
                                                                   Text(
-                                                                    post[
-                                                                        'content'],
+                                                                    commentsMap
+                                                                        .length
+                                                                        .toString(),
                                                                     style:
                                                                         const TextStyle(
                                                                       fontWeight:
@@ -354,64 +432,39 @@ class _FamilyCommunityScreenState extends State<FamilyCommunityScreen> {
                                                                           .black,
                                                                     ),
                                                                   ),
+                                                                  const SizedBox(
+                                                                    width: 30,
+                                                                  ),
+                                                                  post['status'] ==
+                                                                          false
+                                                                      ? ElevatedButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                            if (post['status'] ==
+                                                                                true) {
+                                                                              Fluttertoast.showToast(msg: "post already verified");
+                                                                            } else {
+                                                                              FirebaseDatabase.instance.ref().child("FamilyCommunityPosts").child(post['postId']).update({
+                                                                                "status": true
+                                                                              });
+                                                                              Fluttertoast.showToast(msg: "post is verified");
+                                                                            }
+                                                                          },
+                                                                          child:
+                                                                              const Text("Approve"))
+                                                                      : SizedBox()
                                                                 ],
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 8),
-                                                            Align(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .topLeft,
-                                                              child: Container(
-                                                                height: 400,
-                                                                width: 400,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  image:
-                                                                      DecorationImage(
-                                                                    image:
-                                                                        NetworkImage(
-                                                                      post[
-                                                                          'post'],
-                                                                    ),
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 8,
-                                                            ),
-                                                            Row(
-                                                              children: [
-                                                                const Icon(Icons
-                                                                    .comment_outlined),
-                                                                Text(
-                                                                  commentsMap
-                                                                      .length
-                                                                      .toString(),
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                    color: Colors
-                                                                        .black,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            )
-                                                          ],
+                                                              )
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                              );
-                                            },
-                                          ))
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                            )),
+                                      )
                                     ],
                                   ),
                                 ),

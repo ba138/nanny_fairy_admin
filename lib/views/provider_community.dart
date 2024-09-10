@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:nanny_fairy_admin/Res/Components/Responsive.dart';
@@ -253,8 +254,13 @@ class _ProviderCommunityScreenState extends State<ProviderCommunityScreen> {
                                                   itemBuilder:
                                                       (context, index) {
                                                     final post = posts[index];
-                                                    final Map commentsMap =
-                                                        post['comments'] as Map;
+                                                    final Map<dynamic, dynamic>
+                                                        commentsMap =
+                                                        post['comments'] != null
+                                                            ? post['comments']
+                                                                as Map<dynamic,
+                                                                    dynamic>
+                                                            : {};
                                                     return Container(
                                                       width: 400,
                                                       color: Colors.transparent,
@@ -326,17 +332,36 @@ class _ProviderCommunityScreenState extends State<ProviderCommunityScreen> {
                                                                     CrossAxisAlignment
                                                                         .start,
                                                                 children: [
-                                                                  Text(
-                                                                    post[
-                                                                        'title'],
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .black,
-                                                                    ),
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        post[
+                                                                            'title'],
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          color:
+                                                                              Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                      post['status'] ==
+                                                                              false
+                                                                          ? const Text(
+                                                                              "(UnVerified)",
+                                                                              style: TextStyle(
+                                                                                fontWeight: FontWeight.w400,
+                                                                                color: Colors.grey,
+                                                                              ),
+                                                                            )
+                                                                          : const Text(
+                                                                              "(Verified)",
+                                                                              style: TextStyle(
+                                                                                fontWeight: FontWeight.w400,
+                                                                                color: AppColor.primaryColor,
+                                                                              ),
+                                                                            )
+                                                                    ],
                                                                   ),
                                                                   const SizedBox(
                                                                       height:
@@ -362,20 +387,23 @@ class _ProviderCommunityScreenState extends State<ProviderCommunityScreen> {
                                                               alignment:
                                                                   Alignment
                                                                       .topLeft,
-                                                              child: Container(
-                                                                height: 400,
-                                                                width: 400,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  image:
-                                                                      DecorationImage(
+                                                              child: Card(
+                                                                child:
+                                                                    Container(
+                                                                  height: 400,
+                                                                  width: 400,
+                                                                  decoration:
+                                                                      BoxDecoration(
                                                                     image:
-                                                                        NetworkImage(
-                                                                      post[
-                                                                          'post'],
+                                                                        DecorationImage(
+                                                                      image:
+                                                                          NetworkImage(
+                                                                        post[
+                                                                            'post'],
+                                                                      ),
+                                                                      fit: BoxFit
+                                                                          .fill,
                                                                     ),
-                                                                    fit: BoxFit
-                                                                        .fill,
                                                                   ),
                                                                 ),
                                                               ),
@@ -400,6 +428,27 @@ class _ProviderCommunityScreenState extends State<ProviderCommunityScreen> {
                                                                         .black,
                                                                   ),
                                                                 ),
+                                                                const SizedBox(
+                                                                  width: 30,
+                                                                ),
+                                                                post['status'] ==
+                                                                        false
+                                                                    ? ElevatedButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          if (post['status'] ==
+                                                                              true) {
+                                                                            Fluttertoast.showToast(msg: "post already verified");
+                                                                          } else {
+                                                                            FirebaseDatabase.instance.ref().child("ProviderCommunityPosts").child(post['postId']).update({
+                                                                              "status": true
+                                                                            });
+                                                                            Fluttertoast.showToast(msg: "post is verified");
+                                                                          }
+                                                                        },
+                                                                        child: const Text(
+                                                                            "Approve"))
+                                                                    : SizedBox()
                                                               ],
                                                             )
                                                           ],
