@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://nanny-fairy-e848e.web.app"],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type", "Access-Control-Allow-Origin"]
+  }
+]

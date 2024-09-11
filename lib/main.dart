@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:html' as html;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:nanny_fairy_admin/views/main_Screen.dart';
 
 void main() async {
@@ -12,14 +11,14 @@ void main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-        apiKey: "AIzaSyDRnz6LADaCeEnhRX_hz5SXUyNwOTkSxnc",
-        authDomain: "nanny-fairy.firebaseapp.com",
-        databaseURL: "https://nanny-fairy-default-rtdb.firebaseio.com",
-        projectId: "nanny-fairy",
-        storageBucket: "nanny-fairy.appspot.com",
-        messagingSenderId: "788203773735",
-        appId: "1:788203773735:web:2a38c29fdeb0529ad61302",
-      ),
+          apiKey: "AIzaSyCBUyZVjnq9IGxH9Zu6ACNRIJXtkfZ2iuQ",
+          authDomain: "nanny-fairy.firebaseapp.com",
+          databaseURL: "https://nanny-fairy-default-rtdb.firebaseio.com",
+          projectId: "nanny-fairy",
+          storageBucket: "nanny-fairy.appspot.com",
+          messagingSenderId: "788203773735",
+          appId: "1:788203773735:web:2b98a971d82f7a71d61302",
+          measurementId: "G-R2CHG55HLV"),
     );
   } else {
     await Firebase.initializeApp();
