@@ -300,7 +300,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                               ),
                                             ),
                                             Expanded(
-                                              flex: 3,
+                                              flex: 2,
                                               child: Center(
                                                 child: Text(
                                                   'Name',
@@ -312,7 +312,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                               ),
                                             ),
                                             Expanded(
-                                              flex: 4,
+                                              flex: 3,
                                               child: Center(
                                                 child: Text(
                                                   'Gmail',
@@ -324,7 +324,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                               ),
                                             ),
                                             Expanded(
-                                              flex: 3,
+                                              flex: 2,
                                               child: Center(
                                                 child: Text(
                                                   'Phone Number',
@@ -336,10 +336,22 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                               ),
                                             ),
                                             Expanded(
-                                              flex: 3,
+                                              flex: 2,
                                               child: Center(
                                                 child: Text(
                                                   'Date of Birth',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Center(
+                                                child: Text(
+                                                  'Status',
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black,
@@ -484,26 +496,81 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                                                   .toString())),
                                                     ),
                                                     Expanded(
-                                                      flex: 3,
+                                                      flex: 2,
                                                       child: Center(
                                                           child: Text(name)),
                                                     ),
                                                     Expanded(
-                                                      flex: 4,
+                                                      flex: 3,
                                                       child: Center(
                                                           child: Text(email)),
                                                     ),
                                                     Expanded(
-                                                      flex: 3,
+                                                      flex: 2,
                                                       child: Center(
                                                           child: Text(
                                                               phoneNumber)),
                                                     ),
                                                     Expanded(
-                                                      flex: 3,
+                                                      flex: 2,
                                                       child: Center(
                                                           child: Text(
                                                               formattedDate)),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          // showCustomDialog(
+                                                          //   context,
+                                                          //   name,
+                                                          //   email,
+                                                          //   uid,
+                                                          //   phoneNumber,
+                                                          //   dob,
+                                                          //   address,
+                                                          //   profile,
+                                                          //   idFront,
+                                                          //   postCode,
+                                                          //   houseNumber,
+                                                          //   familyPassion,
+                                                          // );
+                                                        },
+                                                        child: Container(
+                                                          height: 28,
+                                                          width: 50,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: AppColor
+                                                                .primaryColor,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Verified",
+                                                              style: GoogleFonts
+                                                                  .getFont(
+                                                                "Poppins",
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: AppColor
+                                                                      .whiteColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 12,
                                                     ),
                                                     Expanded(
                                                       flex: 1,
