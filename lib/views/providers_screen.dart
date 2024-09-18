@@ -3,6 +3,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nanny_fairy_admin/Res/Components/Responsive.dart';
 import 'package:nanny_fairy_admin/Res/Components/colors.dart';
@@ -465,6 +466,9 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
                                               final String address =
                                                   bankDetails['address'] ??
                                                       'N/A';
+                                              final String status =
+                                                  bankDetails['status'] ??
+                                                      'UnVerified';
                                               final String profile =
                                                   bankDetails['profile'] ??
                                                       'N/A';
@@ -532,6 +536,23 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
                                                       flex: 1,
                                                       child: InkWell(
                                                         onTap: () {
+                                                          if (status ==
+                                                              "UnVerified") {
+                                                            FirebaseDatabase
+                                                                .instance
+                                                                .ref()
+                                                                .child(
+                                                                    "Providers")
+                                                                .child(uid)
+                                                                .update({
+                                                              "status":
+                                                                  "Verified"
+                                                            });
+                                                          } else {
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                    "User is Already Verified");
+                                                          }
                                                           // showCustomDialog(
                                                           //   context,
                                                           //   name,
@@ -562,7 +583,7 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
                                                           ),
                                                           child: Center(
                                                             child: Text(
-                                                              "Verified",
+                                                              status,
                                                               style: GoogleFonts
                                                                   .getFont(
                                                                 "Poppins",
