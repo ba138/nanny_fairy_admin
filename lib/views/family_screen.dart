@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nanny_fairy_admin/Res/Components/Responsive.dart';
 import 'package:nanny_fairy_admin/Res/Components/colors.dart';
@@ -456,6 +457,9 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                               final String address =
                                                   bankDetails['address'] ??
                                                       'N/A';
+                                              final String status =
+                                                  bankDetails['status'] ??
+                                                      'Unverified';
                                               final String profile =
                                                   bankDetails['profile'] ??
                                                       'N/A';
@@ -521,6 +525,22 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                                       flex: 1,
                                                       child: InkWell(
                                                         onTap: () {
+                                                          if (status ==
+                                                              "Unverified") {
+                                                            FirebaseDatabase
+                                                                .instance
+                                                                .ref()
+                                                                .child("Family")
+                                                                .child(uid)
+                                                                .update({
+                                                              "status":
+                                                                  "Verified"
+                                                            });
+                                                          } else {
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                    "User is Alredy verified");
+                                                          }
                                                           // showCustomDialog(
                                                           //   context,
                                                           //   name,
@@ -550,7 +570,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                                                           ),
                                                           child: Center(
                                                             child: Text(
-                                                              "Verified",
+                                                              status,
                                                               style: GoogleFonts
                                                                   .getFont(
                                                                 "Poppins",
